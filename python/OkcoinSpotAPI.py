@@ -24,6 +24,7 @@ class OKCoinSpot:
         params=''
         if symbol:
             params = 'symbol=%(symbol)s' %{'symbol':symbol}
+            print(params)
         return httpGet(self.__url,DEPTH_RESOURCE,params) 
 
     #获取OKCOIN现货历史交易信息
@@ -116,6 +117,15 @@ class OKCoinSpot:
            }
            params['sign'] = buildMySign(params,self.__secretkey)
            return httpPost(self.__url,ORDER_HISTORY_RESOURCE,params)
+           
+           
+    def countBidOrAsk(self,deepth_list):
+        count = 0
+        for x in deepth_list:
+            #print(type(x[1]))
+            count += x[1]
+        return round(count, 3)
+         
 
 
 

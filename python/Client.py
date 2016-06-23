@@ -3,13 +3,14 @@
 # encoding: utf-8
 #客户端调用，用于查看API返回结果
 
+import datetime
 from OkcoinSpotAPI import OKCoinSpot
 from OkcoinFutureAPI import OKCoinFuture
 
 #初始化apikey，secretkey,url
-apikey = 'XXXX'
-secretkey = 'XXXXX'
-okcoinRESTURL = 'www.okcoin.com'   #请求注意：国内账号需要 修改为 www.okcoin.cn  
+apikey = 'c7fa34f4-5744-4458-bdc8-259a1ee4361d'
+secretkey = 'B54AD77AA5460248832FD43436F2A4E1'
+okcoinRESTURL = 'www.okcoin.cn'   #请求注意：国内账号需要 修改为 www.okcoin.cn  
 
 #现货API
 okcoinSpot = OKCoinSpot(okcoinRESTURL,apikey,secretkey)
@@ -17,11 +18,22 @@ okcoinSpot = OKCoinSpot(okcoinRESTURL,apikey,secretkey)
 #期货API
 okcoinFuture = OKCoinFuture(okcoinRESTURL,apikey,secretkey)
 
-print (u' 现货行情 ')
-print (okcoinSpot.ticker('btc_usd'))
+#print (u' 现货行情 ')
+#currenttime = okcoinSpot.ticker('btc_cny')['date']
+#jsonforticker = okcoinSpot.ticker('btc_cny')['ticker']
+#print (type(jsonforticker))
+#print (type(currenttime))
+#print (datetime.datetime.fromtimestamp(float(currenttime)))
+#print (jsonforticker)
 
 print (u' 现货深度 ')
-print (okcoinSpot.depth('btc_usd'))
+deepth = okcoinSpot.depth('btc_cny')
+
+print (deepth['asks'])
+count_ask = okcoinSpot.countBidOrAsk(deepth['asks'])
+count_bid = okcoinSpot.countBidOrAsk(deepth['bids'])
+print ("ask sum:", count_ask)
+print ("bid sum:", count_bid)
 
 #print (u' 现货历史交易信息 ')
 #print (okcoinSpot.trades())
