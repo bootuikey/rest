@@ -4,7 +4,9 @@
 #客户端调用，用于查看API返回结果
 
 import datetime
+import time
 import logging
+from logging.handlers import TimedRotatingFileHandler
 from OkcoinSpotAPI import OKCoinSpot
 from OkcoinFutureAPI import OKCoinFuture
 
@@ -18,26 +20,25 @@ okcoinSpot = OKCoinSpot(okcoinRESTURL,apikey,secretkey)
 
 #期货API
 okcoinFuture = OKCoinFuture(okcoinRESTURL,apikey,secretkey)
+log = logging.getLogger("Collect.bitcoindata")
+log.setLevel(logging.INFO)
+handler = TimedRotatingFileHandler("data/bitcoin.csv", when='D', interval=1)
+log.addHandler(handler)
 
-#print (u' 现货行情 ')
-currenttime = okcoinSpot.ticker('btc_cny')['date']
-jsonforticker = okcoinSpot.ticker('btc_cny')['ticker']
-currentPrice = jsonforticker['last']
-#print (type(jsonforticker))
-#print (type(currenttime))
-#print (datetime.datetime.fromtimestamp(float(currenttime)))
-#print (jsonforticker)
+def logBitcoinData():
+    currenttime = okcoinSpot.ticker('btc_cny')['date']
+    jsonforticker = okcoinSpot.ticker('btc_cny')['ticker']
+    currentPrice = jsonforticker['last']
+    deepth = okcoinSpot.depth('btc_cny')
+    count_ask = okcoinSpot.countBidOrAsk(deepth['asks'])
+    count_bid = okcoinSpot.countBidOrAsk(deepth['bids'])
+    strsss = datetime.datetime.fromtimestamp(float(currenttime)).strftime("%Y-%m-%d %H:%M:%S") + ",{0}".format(currentPrice) + ",{0}".format(count_ask) + ",{0}".format(count_bid)
+    log.info(strsss)
 
-print (u' 现货深度 ')
-deepth = okcoinSpot.depth('btc_cny')
-
-#print (deepth['asks'])
-count_ask = okcoinSpot.countBidOrAsk(deepth['asks'])
-count_bid = okcoinSpot.countBidOrAsk(deepth['bids'])
-strsss = datetime.datetime.fromtimestamp(float(currenttime)).strftime("%Y-%m-%d %H:%M:%S") + ",{0}".format(currentPrice) + ",{0}".format(count_ask) + ",{0}".format(count_bid)
-print (strsss)
-
-
+while True:
+    logBitcoinData()
+    for i in range(9):
+        time.sleep(1)
 #print (u' 现货历史交易信息 ')
 #print (okcoinSpot.trades())
 

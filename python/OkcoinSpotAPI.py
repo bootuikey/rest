@@ -24,7 +24,6 @@ class OKCoinSpot:
         params=''
         if symbol:
             params = 'symbol=%(symbol)s' %{'symbol':symbol}
-            print(params)
         return httpGet(self.__url,DEPTH_RESOURCE,params) 
 
     #获取OKCOIN现货历史交易信息
