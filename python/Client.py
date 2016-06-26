@@ -6,6 +6,7 @@
 import datetime
 import time
 import logging
+from socket import timeout
 from logging.handlers import TimedRotatingFileHandler
 from OkcoinSpotAPI import OKCoinSpot
 from OkcoinFutureAPI import OKCoinFuture
@@ -36,9 +37,14 @@ def logBitcoinData():
     log.info(strsss)
 
 while True:
-    logBitcoinData()
-    for i in range(9):
-        time.sleep(1)
+    try:
+        logBitcoinData()
+        for i in range(9):
+            time.sleep(1)
+    except timeout:
+        log.info("Timeout happenned!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        continue
+    
 #print (u' 现货历史交易信息 ')
 #print (okcoinSpot.trades())
 
